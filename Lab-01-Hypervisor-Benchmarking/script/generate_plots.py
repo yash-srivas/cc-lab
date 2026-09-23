@@ -209,7 +209,7 @@ def main() -> None:
     plot_latency_metrics()
     plot_total_events()
     plot_dashboard()
-    print("[✔] Visualizations successfully generated in images/ directory.")
+    print("[OK] Visualizations successfully generated in images/ directory.")
 
 
 if __name__ == "__main__":
