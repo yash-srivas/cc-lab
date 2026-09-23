@@ -116,9 +116,9 @@ The empirical throughput and latency differences stem from three primary archite
 ## 📂 Repository Structure
 
 ```text
-cloud-computing-/
+Lab-01-Hypervisor-Benchmarking/
 ├── Lab Report.md                  # Comprehensive academic laboratory write-up
-├── README.md                      # Project documentation and performance synthesis
+├── README.md                      # Experiment documentation and performance synthesis
 │
 ├── images/                        # Performance plots and raw benchmark screenshots
 │   ├── Lab 1.jpeg                 # Telemetry proof / terminal screenshot (Node 1)
