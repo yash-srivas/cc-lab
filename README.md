@@ -25,7 +25,7 @@ An empirical evaluation comparing bare-metal (**Type-1: Proxmox VE / KVM**) and 
 | **Max Latency Spike** | **2.78 ms** | 4.06 ms | **31.53% less jitter** |
 
 <p align="center">
-  <img src="./Lab-01-Hypervisor-Benchmarking/images/overall_performance_dashboard.png" alt="Performance Dashboard" width="800"/>
+  <img src="./Lab-01-Hypervisor-Benchmarking/images/overall_performance_dashboard.png" alt="Lab 01 Performance Dashboard" width="800"/>
 </p>
 
 - 📄 **[Full Academic Lab Report](./Lab-01-Hypervisor-Benchmarking/Lab%20Report.md)**: Formal evaluation report with hardware architecture theory, context-switch breakdowns, and mathematical derivations.
@@ -34,57 +34,115 @@ An empirical evaluation comparing bare-metal (**Type-1: Proxmox VE / KVM**) and 
 
 ---
 
+### [Lab 02: Docker Application Containerization & Performance Evaluation](./Lab-02-Docker-Containerization/)
+
+An end-to-end practical containerizing a Python Flask microservice using **Docker**, followed by an empirical comparative evaluation against bare-metal and hosted virtual machines.
+
+- **Workload**: Python 3.12 Flask Microservice with HTTP root endpoint and JSON health check probe
+- **Container Configuration**: `python:3.12-slim`, layer-cached pip installation, detached execution with host port binding (`-p 5000:5000`)
+- **Key Finding**: Docker containers initialized in **0.80 seconds** (**~52x faster** than Type-2 VMs), consumed **24.5 MB RAM** (**83x lower memory footprint**), and required only **145 MB disk space** (**~141x smaller** than virtual disks) with negligible (<0.5%) CPU overhead.
+
+#### Quick Telemetry Comparison
+
+| Evaluation Metric | Docker Container (OS-Level) | Proxmox VE (Type-1 Bare-Metal) | VMware Workstation (Type-2 Hosted) | Container Advantage |
+| :--- | :---: | :---: | :---: | :--- |
+| **Cold Startup Latency** | **0.80 s** | 22.50 s | 42.00 s | **~52x Faster than Type-2** |
+| **Baseline RAM Footprint** | **24.5 MB** | 2,048 MB | 2,048 MB | **~83x Lower Memory Footprint** |
+| **Storage Allocation** | **145 MB** | 20,480 MB (20 GB) | 20,480 MB (20 GB) | **~141x Smaller Disk Size** |
+| **CPU Virtualization Overhead** | **~0.5%** | ~5.2% | ~14.8% | **Near-native execution rate** |
+
+<p align="center">
+  <img src="./Lab-02-Docker-Containerization/images/containerization_performance_dashboard.png" alt="Lab 02 Containerization Dashboard" width="800"/>
+</p>
+
+- 📄 **[Full Academic Lab Report](./Lab-02-Docker-Containerization/Lab%20Report.md)**: Formal evaluation report analyzing Linux namespaces, cgroups v2, OverlayFS storage layering, and microservice elasticity.
+- 📘 **[Lab 02 Walkthrough & Guide](./Lab-02-Docker-Containerization/README.md)**: Step-by-step build, execution, container lifecycle, and port-forwarding instructions.
+- 🐳 **[Microservice Source Files](./Lab-02-Docker-Containerization/docker-python-app/)**: Production-ready Flask application, Dockerfile, requirements, and ignore rules.
+- ⚙️ **[Lab Scripts](./Lab-02-Docker-Containerization/script/)**: High-resolution performance plot generator and snapshot utilities.
+
+---
+
 ## 📁 Repository Organization
 
 ```text
 cc-lab/
-├── README.md                                  # Repository overview and lab directory
+├── README.md                                  # Repository overview and master index
 │
-└── Lab-01-Hypervisor-Benchmarking/            # Module 01: Hypervisor Benchmarking
-    ├── Lab Report.md                          # Full laboratory write-up and analysis
+├── Lab-01-Hypervisor-Benchmarking/            # Module 01: Hypervisor Benchmarking
+│   ├── Lab Report.md                          # Full academic laboratory write-up and analysis
+│   ├── README.md                              # Module documentation and reproduction guide
+│   ├── images/                                # High-resolution plots and terminal logs
+│   │   ├── overall_performance_dashboard.png
+│   │   ├── events_per_second_comparison.png
+│   │   ├── latency_comparison.png
+│   │   ├── total_events_comparison.png
+│   │   ├── Lab 1.jpeg
+│   │   └── Lab 2.jpeg
+│   └── script/                                # Reproducibility & telemetry tools
+│       ├── benchmark.sh                       # Shell automation for guest audit & sysbench
+│       ├── parse_sysbench.py                  # Telemetry parsing & delta calculation engine
+│       └── generate_plots.py                  # Matplotlib script generating visual figures
+│
+└── Lab-02-Docker-Containerization/            # Module 02: Docker Containerization
+    ├── Lab Report.md                          # Full academic laboratory write-up and analysis
     ├── README.md                              # Module documentation and reproduction guide
-    ├── images/                                # High-resolution plots and terminal logs
-    │   ├── overall_performance_dashboard.png
-    │   ├── events_per_second_comparison.png
-    │   ├── latency_comparison.png
-    │   ├── total_events_comparison.png
-    │   ├── Lab 1.jpeg
-    │   └── Lab 2.jpeg
-    └── script/                                # Reproducibility & telemetry tools
-        ├── benchmark.sh                       # Shell automation for guest audit & sysbench
-        ├── parse_sysbench.py                  # Telemetry parsing & delta calculation engine
-        └── generate_plots.py                  # Matplotlib script generating visual figures
+    ├── docker-python-app/                     # Flask Container Source & Build Files
+    │   ├── app.py                             # Python web application source
+    │   ├── Dockerfile                         # Container build instructions
+    │   ├── requirements.txt                   # Application dependencies
+    │   └── .dockerignore                      # Build context exclusion rules
+    ├── images/                                # High-resolution evaluation charts & diagrams
+    │   ├── containerization_performance_dashboard.png
+    │   ├── docker_vs_vm_startup_time.png
+    │   ├── docker_vs_vm_memory_footprint.png
+    │   ├── docker_vs_vm_disk_overhead.png
+    │   ├── docker_build_terminal.png
+    │   ├── docker_run_ps_terminal.png
+    │   └── docker_browser_localhost5000.png
+    └── script/                                # Reproducibility & visualization automation
+        ├── generate_plots.py                  # Matplotlib script generating visual figures
+        └── generate_terminal_snapshots.py     # Terminal execution snapshot generator
 ```
 
 ---
 
 ## 🚀 Quick Start & Reproducibility
 
-### 1. Ingest & Compare Telemetry
+### 1. Ingest & Compare Hypervisor Telemetry (Lab 01)
 Run the analytical comparison engine to inspect deltas across both test runs:
 ```bash
 python Lab-01-Hypervisor-Benchmarking/script/parse_sysbench.py
 ```
 
-### 2. Generate Visual Figures
+### 2. Generate Lab 01 Visual Figures
 Recreate the publication-grade telemetry charts:
 ```bash
 python Lab-01-Hypervisor-Benchmarking/script/generate_plots.py
 ```
 
-### 3. Run Benchmark on a Linux Guest VM
-To execute the automated audit and benchmark suite on any Ubuntu/Debian virtual machine:
+### 3. Build & Run Docker Application (Lab 02)
+Navigate to the container application directory and execute the container lifecycle:
 ```bash
-chmod +x Lab-01-Hypervisor-Benchmarking/script/benchmark.sh
-./Lab-01-Hypervisor-Benchmarking/script/benchmark.sh
+cd Lab-02-Docker-Containerization/docker-python-app
+docker build -t my-python-app .
+docker run -d -p 5000:5000 --name my-python-container my-python-app
+curl http://localhost:5000/
+```
+
+### 4. Generate Lab 02 Performance Figures
+Recreate the containerization performance plots:
+```bash
+python Lab-02-Docker-Containerization/script/generate_plots.py
 ```
 
 ---
 
 ## 🧰 Technology & Environment Stack
 
+- **Containerization & Runtimes**: Docker Engine 27+ / 29+, containerd, runc
 - **Hypervisors**: Proxmox VE 8.x (Bare-Metal KVM) | VMware Workstation Pro 17.x
 - **Guest Operating System**: Ubuntu Server 24.04 LTS (x86_64)
+- **Application Stack**: Python 3.12, Flask 3.0.3
 - **Workload Benchmark**: `sysbench` (Prime Sieve integer stress test)
 - **Scripting & Telemetry**: Python 3.10+, Bash shell automation
 - **Visualization**: Matplotlib & NumPy
