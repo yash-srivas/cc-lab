@@ -30,19 +30,10 @@ An empirical evaluation comparing bare-metal (**Type-1: Proxmox VE / KVM**) and 
 
 - 📄 **[Full Academic Lab Report](./Lab-01-Hypervisor-Benchmarking/Lab%20Report.md)**: Formal evaluation report with hardware architecture theory, context-switch breakdowns, and mathematical derivations.
 - 📘 **[Lab 01 Walkthrough & Guide](./Lab-01-Hypervisor-Benchmarking/README.md)**: In-depth setup, step-by-step reproduction instructions, and analytical findings.
-- ⚙️ **[Lab Scripts](./Lab-01-Hypervisor-Benchmarking/script/)**: Automated benchmark harness, telemetry parser, and plot generator.
+-⚙️ **[Lab Scripts](./Lab-01-Hypervisor-Benchmarking/script/)**: Automated benchmark harness, telemetry parser, and plot generator.
 
 ---
 
-
-#### Quick Telemetry Comparison
-
-| Evaluation Metric | Docker Container (OS-Level) | Proxmox VE (Type-1 Bare-Metal) | VMware Workstation (Type-2 Hosted) | Container Advantage |
-| :--- | :---: | :---: | :---: | :--- |
-| **Cold Startup Latency** | **0.80 s** | 22.50 s | 42.00 s | **~52x Faster than Type-2** |
-| **Baseline RAM Footprint** | **24.5 MB** | 2,048 MB | 2,048 MB | **~83x Lower Memory Footprint** |
-| **Storage Allocation** | **145 MB** | 20,480 MB (20 GB) | 20,480 MB (20 GB) | **~141x Smaller Disk Size** |
-| **CPU Virtualization Overhead** | **~0.5%** | ~5.2% | ~14.8% | **Near-native execution rate** |
 
 
 ## 📁 Repository Organization
